@@ -6,8 +6,6 @@ import Profile from "./components/Profile.jsx"
 import Product from "./components/Product.jsx"
 import Navbar from "./components/Navbar.jsx"
 
-
-
 function App() {
 
   return (
@@ -23,7 +21,7 @@ function App() {
    <Routes>
 
       <Route path="/" element={<Home />} />
-      <Route path="/favorites" element={<Favourites/>} />
+      <Route path="/favourites" element={<Favourites/>} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/:id" element={<Product />} />
 

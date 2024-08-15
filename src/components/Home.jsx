@@ -1,4 +1,5 @@
 import React from 'react'
+import Product from './Product'
 
 export default function Home() {
   return (
@@ -8,8 +9,8 @@ export default function Home() {
         <div>Ace The Assignment with our brand new notebooks</div>
      </div>
 
+     <Product/>
      
-
     </div>
   )
 }

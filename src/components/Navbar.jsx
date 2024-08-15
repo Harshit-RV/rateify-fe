@@ -2,6 +2,25 @@ import React, { useState } from 'react';
 import { FaRegHeart, FaSearch } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from 'react-router-dom';
+import { useClerk } from '@clerk/clerk-react'; // Import useClerk for authentication
+
+const LogoutButton = () => {
+  const { signOut } = useClerk();
+
+  const handleLogout = () => {
+    signOut().then(() => {
+      window.location.href = '/'; 
+    }).catch((error) => {
+      console.error('Logout error:', error);
+    });
+  };
+
+  return (
+    <button onClick={handleLogout} className="text-red-500">
+      Logout
+    </button>
+  );
+};
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -24,8 +43,10 @@ export default function Navbar() {
           </div>
           {menu && (
             <div className='absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-20'>
-              <div className='p-2 cursor-pointer hover:bg-gray-100' onClick={() => { /* Handle Create Wishlist */ }}>Create Wishlist</div>
-              <div className='p-2 cursor-pointer hover:bg-gray-100' onClick={() => { /* Handle Logout */ }}>Logout</div>
+              <div className='p-2 cursor-pointer hover:bg-gray-100' onClick={() => {}}>Create Wishlist</div>
+              <div className='p-2 cursor-pointer hover:bg-gray-100'>
+                <LogoutButton />
+              </div>
             </div>
           )}
         </div>

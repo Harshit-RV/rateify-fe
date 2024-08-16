@@ -8,6 +8,7 @@ import Favourites from "./components/Favourites.jsx"
 import Profile from "./components/Profile.jsx"
 import Product from "./components/Product.jsx"
 import Navbar from "./components/Navbar.jsx"
+import MyReviews from "./components/MyReviews.jsx"
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
       <Route path="/:id" element={<Product />} />
       <Route path="/sign-in" element={<SignInPage/>} />
       <Route path="/sign-up" element={<SignUpPage/>} />
+      <Route path = "/myreviews" element= {<MyReviews/>}/>
 
    </Routes>
 

@@ -43,10 +43,17 @@ export default function Navbar() {
           </div>
           {menu && (
             <div className='absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-20'>
+              <div  className='p-2 cursor-pointer hover:bg-gray-100'   
+              onClick={() => {
+                 navigate("/myreviews");
+                 setMenu(!menu);
+                      }}> My Reviews </div>
+                      
               <div className='p-2 cursor-pointer hover:bg-gray-100' onClick={() => {}}>Create Wishlist</div>
               <div className='p-2 cursor-pointer hover:bg-gray-100'>
                 <LogoutButton />
               </div>
+
             </div>
           )}
         </div>

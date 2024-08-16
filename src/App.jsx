@@ -27,7 +27,7 @@ function App() {
    <Route path="/" element= { <ProtectedRoute child={<Home/>} /> }/>
       <Route path="/favourites" element={<Favourites/>} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/:id" element={<Product />} />
+      {/* <Route path="/:id" element={<Product />} /> */}
       <Route path="/sign-in" element={<SignInPage/>} />
       <Route path="/sign-up" element={<SignUpPage/>} />
       <Route path="/product/:id" element={<ProductDetail />} />

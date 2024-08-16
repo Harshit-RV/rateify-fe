@@ -29,15 +29,15 @@ const ProductDetail = () => {
         </div>
         <div className='col-span-2'>
             <h2 className="text-3xl font-bold mb-4">{product.productName}</h2>
-            <div className=" mb-2 flex flex-row gap-4 items-end">
+            <div className=" mb-2 flex flex-row gap-3 items-end">
               <p className="text-3xl font-bold text-[#2a8703]">{`Now: $${product.price}`}</p>
-              <p className="text-md font-bold text-red-500 line-through">{`$${product.price}`}</p>
+              <p className="text-md font-bold text-red-500 line-through mb-0.5">{`$${(product.price / (1 - product.discount / 100)).toFixed(2)}`}</p>
             </div>
             <div className='flex flex-row gap-2 items-center text-sm text-[#2a8703] font-semibold mb-4'>
                 <div className='bg-green-100 w-16 text-sm text-[#2a8703] font-semibold text-center'>
                     You save
                 </div>
-                <h3>{`${product.discount}`}</h3>
+                <h3>{`${product.discount}`}%</h3>
             </div>
             <p className="text-md mb-6">{product.featureParagraph}</p>
             <div className='flex flex-row gap-4 items-center'>

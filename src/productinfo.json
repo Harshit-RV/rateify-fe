@@ -3,7 +3,7 @@
         "productName": "Apple iPhone 13",
         "briefDescription": "Apple iPhone 13 with A15 Bionic chip and 5G capabilities.",
         "price": 799,
-        "discount": "10% off",
+        "discount": "10%",
         "featureParagraph": "The iPhone 13 offers a stunning Super Retina XDR display, advanced dual-camera system, and up to 19 hours of video playback. It is designed to deliver superior performance with the A15 Bionic chip, making it perfect for multitasking and gaming.",
         "imageLink": "https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_UF1000,1000_QL80_.jpg"
     },
@@ -11,7 +11,7 @@
         "productName": "Samsung 55\" QLED 4K Smart TV",
         "briefDescription": "Samsung 55-inch QLED 4K Smart TV with Quantum Dot technology.",
         "price": 899,
-        "discount": "15% off",
+        "discount": "15%",
         "featureParagraph": "Experience cinematic viewing with the Samsung QLED 4K Smart TV. It features Quantum Dot technology for vivid colors and crisp details, along with smart capabilities to access your favorite streaming services with ease.",
         "imageLink": "https://images.samsung.com/is/image/samsung/p6pim/in/qa55q60daulxl/gallery/in-qled-q60d-qa55q60daulxl-539976106?$650_519_PNG$"
     },
@@ -19,7 +19,7 @@
         "productName": "Ninja Professional Blender",
         "briefDescription": "Ninja Professional Blender with 1000-Watt base and Total Crushing Technology.",
         "price": 99,
-        "discount": "20% off",
+        "discount": "20%",
         "featureParagraph": "The Ninja Professional Blender is a powerful kitchen appliance that effortlessly crushes ice, whole fruits, and vegetables for smooth and nutritious drinks. Its Total Crushing Technology ensures perfect results every time.",
         "imageLink": "https://m.media-amazon.com/images/I/51K1HjDQ4BL._AC_UF894,1000_QL80_.jpg"
     },
@@ -27,7 +27,7 @@
         "productName": "Dyson V11 Cordless Vacuum Cleaner",
         "briefDescription": "Dyson V11 Cordless Vacuum Cleaner with powerful suction and intelligent cleaning modes.",
         "price": 599,
-        "discount": "5% off",
+        "discount": "5%",
         "featureParagraph": "The Dyson V11 adapts intelligently to different floor types, offering up to 60 minutes of fade-free power. With its advanced whole-machine filtration, it captures 99.99% of dust particles as small as 0.3 microns.",
         "imageLink": "https://rukminim2.flixcart.com/image/720/864/kk8mcnk0/vacuum-cleaner/q/6/d/v11-absolute-pro-dyson-original-imafzmhydfxzqvnz.jpeg?q=60&crop=false"
     },
@@ -35,7 +35,7 @@
         "productName": "Instant Pot Duo 7-in-1 Electric Pressure Cooker",
         "briefDescription": "Instant Pot Duo 7-in-1 Electric Pressure Cooker with 14 one-touch programs.",
         "price": 89,
-        "discount": "25% off",
+        "discount": "25%",
         "featureParagraph": "The Instant Pot Duo combines seven kitchen appliances in one, including a pressure cooker, slow cooker, rice cooker, steamer, sauté pan, yogurt maker, and warmer. It simplifies meal preparation and saves time.",
         "imageLink": "https://images-cdn.ubuy.co.in/63eed035df3e5717a56bc995-instant-pot-duo-7-in-1-electric-pressure.jpg"
     },
@@ -43,7 +43,7 @@
         "productName": "Fitbit Charge 5",
         "briefDescription": "Fitbit Charge 5 Advanced Fitness & Health Tracker with built-in GPS.",
         "price": 149,
-        "discount": "10% off",
+        "discount": "10%",
         "featureParagraph": "Track your fitness journey with the Fitbit Charge 5. It includes advanced health metrics like stress management, heart rate variability, and oxygen saturation monitoring. The built-in GPS allows for precise tracking of outdoor activities.",
         "imageLink": "https://m.media-amazon.com/images/I/61PmMzYM4qL.jpg"
     },
@@ -51,7 +51,7 @@
         "productName": "Keurig K-Elite Coffee Maker",
         "briefDescription": "Keurig K-Elite Single Serve Coffee Maker with iced coffee setting.",
         "price": 139,
-        "discount": "15% off",
+        "discount": "15%",
         "featureParagraph": "Brew your favorite coffee in minutes with the Keurig K-Elite. It offers a strong brew option, an iced coffee setting, and a large 75-ounce water reservoir, making it perfect for home or office use.",
         "imageLink": "https://m.media-amazon.com/images/I/512UJ-Dz8sL._AC_UF894,1000_QL80_.jpg"
     },
@@ -59,7 +59,7 @@
         "productName": "Sony WH-1000XM4 Wireless Noise-Cancelling Headphones",
         "briefDescription": "Sony WH-1000XM4 Over-Ear Wireless Noise-Cancelling Headphones.",
         "price": 349,
-        "discount": "10% off",
+        "discount": "10%",
         "featureParagraph": "Experience industry-leading noise cancellation with the Sony WH-1000XM4. These headphones offer superior sound quality, long battery life, and advanced features like touch control and adaptive sound for a personalized listening experience.",
         "imageLink": "https://i.rtings.com/assets/products/nggZcsC3/sony-wh-1000xm4-wireless/design-medium.jpg?format=auto"
     }

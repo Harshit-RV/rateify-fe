@@ -5,6 +5,7 @@ import Favourites from "./components/Favourites.jsx"
 import Profile from "./components/Profile.jsx"
 import Product from "./components/Product.jsx"
 import Navbar from "./components/Navbar.jsx"
+import ProductDetail from './components/ProductDetail.jsx'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
       <Route path="/favourites" element={<Favourites/>} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/:id" element={<Product />} />
+      <Route path="/product/:id" element={<ProductDetail />} />
 
    </Routes>
 

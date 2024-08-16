@@ -7,11 +7,48 @@ import { BiSolidDownvote } from "react-icons/bi";
 export default function MyReviews() {
   return (
     <>
-<div className='grid grid-cols-3 justify-items-center items-center text-center mx-auto mt-20'>
-    <div className='bg-[#367C2B] rounded-sm text-white'>Total Reviews</div>
-    <div>Total Earnings</div>
-    <div>Redeemable Earnings</div>
+<div className='grid grid-cols-3 justify-items-center items-center text-center mx-[40vh] mt-20'>
+
+    <div className='bg-[#367C2B] rounded-lg p-[4vh] text-white w-[28vh] h-[20vh] flex flex-col items-center justify-center mx-auto'>
+    <div className='font-bold text-lg'>Total Reviews</div>
+    <div className='text-xl'>50</div>
+    </div>
+
+    <div className='bg-[#367C2B] rounded-lg p-[4vh] text-white w-[28vh] h-[20vh] flex flex-col items-center justify-center mx-auto'>
+    <div className='font-bold text-lg'>Total Earnings</div>
+    <div className='text-xl'>100$</div>
+    </div>
+
+    <div className='bg-[#367C2B] rounded-lg p-[4vh] text-white w-[28vh] h-[20vh] flex flex-col items-center justify-center mx-auto'>
+    <div className='font-bold text-lg'>Redeem Earnings</div>
+    <div className='text-xl'>10$</div>
+    </div>
+
 </div>
+
+    <div className='mt-10'>
+      <ReviewCard 
+        imageUrl="https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_UF1000,1000_QL80_.jpg" 
+        rating={4} 
+        reviewText="I've been using the iPhone for a few months now, and it has completely transformed how I interact with technology daily. The build quality is top-notch, with a sleek design that feels premium in the hand. The display is vibrant, with colors that pop and blacks that are deep and true. I love the camera setup—whether I'm taking photos in bright sunlight or low light, the results are consistently stunning."
+      />
+    </div>
+
+    <div className='mt-10'>
+      <ReviewCard 
+        imageUrl="https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_UF1000,1000_QL80_.jpg" 
+        rating={4} 
+        reviewText="I've been using the iPhone for a few months now, and it has completely transformed how I interact with technology daily. The build quality is top-notch, with a sleek design that feels premium in the hand. The display is vibrant, with colors that pop and blacks that are deep and true. I love the camera setup—whether I'm taking photos in bright sunlight or low light, the results are consistently stunning."
+      />
+    </div>
+
+    <div className='mt-10'>
+      <ReviewCard 
+        imageUrl="https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_UF1000,1000_QL80_.jpg" 
+        rating={4} 
+        reviewText="I've been using the iPhone for a few months now, and it has completely transformed how I interact with technology daily. The build quality is top-notch, with a sleek design that feels premium in the hand. The display is vibrant, with colors that pop and blacks that are deep and true. I love the camera setup—whether I'm taking photos in bright sunlight or low light, the results are consistently stunning."
+      />
+    </div>
 
     <div className='mt-10'>
       <ReviewCard 

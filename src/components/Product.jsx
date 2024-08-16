@@ -27,37 +27,49 @@ export default function Product() {
 
 const ProductCatalogue = (props) => {
   const [heart, setHeart] = useState(false);
-
   const navigate = useNavigate();
+
   const handleClick = () => {
     navigate(`/product/${props.id}`);
   };
+
   return (
     <div className="flex flex-col rounded-xl shadow-md w-[50vh] h-[60vh]">
-       <div className="w-full h-[50%] flex items-center justify-center bg-gray-100">
+      <div className="w-full h-[50%] flex items-center justify-center bg-gray-100">
         <img 
           className="object-contain max-w-full max-h-full rounded-t-xl m-5" 
           src={props.image} 
-          alt="description" 
+          alt={props.name} 
         />
       </div>
-      <div className="bg-white rounded-b-xl p-5">
+      <div className="bg-white rounded-b-xl p-5 flex flex-col justify-between h-[50%]">
         <div className="flex justify-between text-xl font-bold">
-          <div className='h-[10vh]'>{props.name}</div>
+          <div>{props.name}</div>
           <div className="font-black text-[#007DC6] text-xl">{props.price}</div>
         </div>
-        <div className="font-sans pt-2.5 h-[10vh]">{props.description}</div>
-
-        <div className='flex items-center justify-center justify-content gap-5'>
-        <div className='bg-black py-3 w-[60vh] rounded-xl mt-2.5 flex flex-row gap-2 items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300'>
         <div className="font-sans pt-2.5">{props.description}</div>
-        <div  onClick={handleClick} className='bg-black py-3 rounded-xl mt-2.5 flex flex-row gap-2 items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300'>
-          Check it out
-          <FaArrowRight className='text-xl ' />
-
+        <div className="flex items-center justify-between mt-2.5">
+          <div 
+            onClick={handleClick} 
+            className="bg-black py-3 w-full rounded-xl flex items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300"
+          >
+            Check it out
+            <FaArrowRight className="text-xl ml-2" />
           </div>
-          {heart? (<FaHeart color='red' onClick={() => setHeart(!heart)} size={40} />):  (<FaRegHeart  onClick={() => setHeart(!heart)} size={40}  />) }
-
+          {heart ? (
+            <FaHeart 
+              color="red" 
+              onClick={() => setHeart(!heart)} 
+              size={40} 
+              className="ml-5 hover:cursor-pointer" 
+            />
+          ) : (
+            <FaRegHeart 
+              onClick={() => setHeart(!heart)} 
+              size={40} 
+              className="ml-5 hover:cursor-pointer" 
+            />
+          )}
         </div>
       </div>
     </div>

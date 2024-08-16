@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import productData from '../productinfo.json';
 import { FaHeart } from "react-icons/fa";
@@ -6,6 +6,7 @@ import axios from 'axios'
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { BiSolidUpvote } from "react-icons/bi";
 import { BiSolidDownvote } from "react-icons/bi";
+import { getProductFeedback } from '../lib/Web3';
 
 const API_KEY = import.meta.env.GOOGLE_API_KEY; 
 const genAI = new GoogleGenerativeAI(API_KEY);
@@ -37,6 +38,7 @@ const ProductDetail = () => {
   const { id } = useParams(); 
   const product = getProductById(id); 
   const [isLiked, setIsLiked] = useState(false);
+  const [ feedbacks, setFeedbacks ] = useState([]);
 
   const handleClick = () => {
     setIsLiked(!isLiked);
@@ -45,6 +47,14 @@ const ProductDetail = () => {
   if (!product) {
     return <div>Product not found</div>;
   }
+
+  useEffect(() => {
+    async function fetchFeedbacks() {
+        const response = await getProductFeedback('address', id);
+        setFeedbacks(response);
+    }
+    fetchFeedbacks();
+  }, []);
 
   return (
     <div className="p-4 mx-auto flex flex-col  items-center">
@@ -202,9 +212,8 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
         <div className="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-lg">
           <h2 className="text-xl font-bold mb-4">Write a Review</h2>
           <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-2">Write Manually</h3>
             <textarea
-              className="w-full h-24 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-24 p-2 border font-light border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Write your review here..."
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
@@ -214,19 +223,19 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
             <h3 className="text-lg font-semibold mb-2">Generate by AI</h3>
             <input
               type="text"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
+              className="w-full p-2 border font-light border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
               placeholder="Enter keywords to revamp your review using AI..."
               value={aiPrompt}
               onChange={(e) => setAIPrompt(e.target.value)}
             />
             <button
               onClick={handleAIPromptSubmit}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+              className="bg-[#F47321] text-white px-4 py-2 rounded-lg hover:bg-[#F47321]/70 transition duration-300"
             >
               Generate Review
             </button>
             {aiReview && (
-              <div className="mt-4 p-2 border border-gray-300 rounded-lg bg-gray-100">
+              <div className="mt-4 p-2 border border-gray-300 rounded-lg font-light bg-gray-100">
                 <h4 className="font-semibold mb-2">AI-Generated Review:</h4>
                 <p>{aiReview}</p>
               </div>
@@ -263,7 +272,7 @@ const WriteReview = () => {
     };
 
     const { id } = useParams();
-    const product = productData[id];
+    const product = getProductById(id); 
 
     const handleGenerateAIReview = async (prompt) => {
       const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
@@ -299,10 +308,10 @@ const WriteReview = () => {
     };
 
     return (
-      <div>
+      <div className='text-sm'>
         <button
           onClick={handlePopupOpen}
-          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+          className="bg-[#F47321] text-white px-6 py-2 rounded-lg hover:bg-[#F47321]/70 transition duration-300"
         >
           Write a Review
         </button>

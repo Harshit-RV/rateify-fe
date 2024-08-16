@@ -205,7 +205,7 @@ const ReviewCard = ({ rating, reviewText, op, upvotes, downvotes, fetchFeedbacks
 
 
 
-const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedbacks }) => {
+const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedbacks, loading }) => {
     const [reviewText, setReviewText] = useState('');
     const [aiPrompt, setAIPrompt] = useState('');
     const [aiReview, setAIReview] = useState('');
@@ -218,6 +218,7 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedba
       // }
     };
 
+    const [aiReviewText, setAIReviewText] = useState(''); 
   
     const handleManualSubmit = async () => {
       const address = localStorage.getItem('address');
@@ -235,9 +236,14 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedba
         console.log('Rating:', rating);
         setReviewText(response);
         setAIReview(response);
+        setAIReviewText(response); 
       } catch (error) {
         console.error('Error generating AI review:', error);
       }
+    };
+  
+    const handleUseAIReview = () => {
+      setReviewText(aiReviewText);
     };
   
     if (!show) {
@@ -281,13 +287,21 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedba
             <button
               onClick={handleAIPromptSubmit}
               className="bg-[#F47321] text-white px-4 py-2 rounded-lg hover:bg-[#F47321]/70 transition duration-300"
+              disabled={loading} 
             >
               Generate Review
             </button>
+            {loading && <Loader />} 
             {aiReview && (
               <div className="mt-4 p-2 border border-gray-300 rounded-lg font-light bg-gray-100">
                 <h4 className="font-semibold mb-2">AI-Generated Review:</h4>
                 <p>{aiReview}</p>
+                <button
+                  onClick={handleUseAIReview}
+                  className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 mt-2"
+                >
+                  Use AI Review
+                </button>
               </div>
             )}
           </div>
@@ -309,14 +323,17 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedba
       </div>
     );
   };
+
+
   
 const WriteReview = ({ fetchFeedbacks }) => {
     const [showPopup, setShowPopup] = useState(false);
-  
+    const [loading, setLoading] = useState(false); 
+
     const handlePopupOpen = () => {
       setShowPopup(true);
     };
-  
+
     const handlePopupClose = () => {
       setShowPopup(false);
     };
@@ -338,10 +355,12 @@ const WriteReview = ({ fetchFeedbacks }) => {
           try {
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
       
-            // Prompt to generate a review with a limit of 100 words
             const productPrompt = `Write a review of the ${product.productName} focusing on its ${product.featureParagraph.slice(0, 30)}. Keep the review under 100 words.`;
       
             const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
+            
+            await new Promise(resolve => setTimeout(resolve, 3000)); 
+
             const result = await model.generateContent(combinedPrompt);
       
             const response = result.response;
@@ -356,10 +375,12 @@ const WriteReview = ({ fetchFeedbacks }) => {
             console.error("Error generating content:", error);
           }
         }
-      
-        return await run(prompt);
+
+        setLoading(true); 
+        const generatedReview = await run(prompt);
+        setLoading(false); 
+        return generatedReview;
       };      
-  
 
     return (
       <div className='text-sm'>
@@ -380,5 +401,13 @@ const WriteReview = ({ fetchFeedbacks }) => {
       </div>
     );
   };
+
+
+  const Loader = () => (
+    <div className="flex items-center justify-center">
+      <div className="border-t-4 border-blue-500 border-solid w-12 h-12 rounded-full animate-spin"></div>
+    </div>
+  );
+  
 
 export default ProductDetail;

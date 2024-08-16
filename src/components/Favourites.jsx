@@ -23,7 +23,7 @@ const ProductCatalogue = (props) => {
         <div className="font-sans pt-2.5 h-[10vh]">{props.description}</div>
 
         <div className='flex items-center justify-center gap-5'>
-          <div className='bg-black py-3 w-[60vh] rounded-xl mt-2.5 flex flex-row gap-2 items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300'>
+          <div className='bg-[#004C91] py-3 w-[60vh] rounded-xl mt-2.5 flex flex-row gap-2 items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300'>
             Check it out
             <FaArrowRight className='text-xl' />
           </div>

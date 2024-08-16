@@ -48,8 +48,10 @@ export default function Navbar() {
                  navigate("/myreviews");
                  setMenu(!menu);
                       }}> My Reviews </div>
-                      
+
               <div className='p-2 cursor-pointer hover:bg-gray-100' onClick={() => {}}>Create Wishlist</div>
+              <div className='p-2 cursor-pointer hover:bg-gray-100'onClick={() => navigate("/metamask")}>Metamask Login</div>
+
               <div className='p-2 cursor-pointer hover:bg-gray-100'>
                 <LogoutButton />
               </div>

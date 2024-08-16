@@ -8,6 +8,7 @@ import { BiSolidUpvote } from "react-icons/bi";
 import { BiSolidDownvote } from "react-icons/bi";
 import { getProductFeedback } from '../lib/Web3';
 import Metamask from './Metamask';
+import StarRating from './StarRating';
 
 const API_KEY = import.meta.env.GOOGLE_API_KEY; 
 const genAI = new GoogleGenerativeAI(API_KEY);
@@ -214,8 +215,11 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-lg">
-          <h2 className="text-xl font-bold mb-4">Write a Review</h2>
-          <div className="mb-4">
+          <div className='flex justify-content justify-between items-center justify-items-center'>
+          <h2 className="text-xl font-bold">Write a Review</h2>
+          <StarRating  />
+          </div>
+          <div className="mb-4 mt-4">
             <textarea
               className="w-full h-24 p-2 border font-light border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Write your review here..."
@@ -319,6 +323,8 @@ const WriteReview = () => {
         >
           Write a Review
         </button>
+
+        
   
         <ReviewPopup
           show={showPopup}

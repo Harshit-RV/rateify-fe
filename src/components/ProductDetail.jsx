@@ -153,37 +153,46 @@ const WriteReview = () => {
     const product = productData[id];
 
     const handleGenerateAIReview = async (prompt) => {
-      const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-  
-      if (!API_KEY) {
-        console.error("Missing Google API Key");
-        return;
-      }
-  
-      const genAI = new GoogleGenerativeAI(API_KEY);
-  
-      async function run(prompt) {
-        try {
-          const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-          const productPrompt = `Write a review of the ${product.productName} focusing on its ${product.featureParagraph.slice(0, 30)}...`; // Truncate feature paragraph for brevity
-          const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
-          const result = await model.generateContent(combinedPrompt);
-  
-          const response = result.response;
-          if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
-            const generatedText = response.candidates[0].content.parts.map(part => part.text).join("\n");
-            console.log("Generated Text:", generatedText);
-            return generatedText;
-          } else {
-            console.log("No valid response structure found.");
-          }
-        } catch (error) {
-          console.error("Error generating content:", error);
+  const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+  if (!API_KEY) {
+    console.error("Missing Google API Key");
+    return;
+  }
+
+  const genAI = new GoogleGenerativeAI(API_KEY);
+
+  async function run(prompt) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+      
+      const productPrompt = `Write a review of the ${product.productName} focusing on its ${product.featureParagraph.slice(0, 30)}...`; 
+      const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
+      const result = await model.generateContent(combinedPrompt);
+
+      const response = result.response;
+      if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
+        let generatedText = response.candidates[0].content.parts.map(part => part.text).join("\n");
+        
+        // Manually limit the text to 100 words
+        const words = generatedText.split(" ");
+        if (words.length > 100) {
+          generatedText = words.slice(0, 100).join(" ") + "...";
         }
+
+        console.log("Generated Text:", generatedText);
+        return generatedText;
+      } else {
+        console.log("No valid response structure found.");
       }
+    } catch (error) {
+      console.error("Error generating content:", error);
+    }
+  }
+
+  return await run(prompt);
+};
   
-      return await run(prompt);
-    };
 
     return (
       <div>

@@ -3,9 +3,11 @@ import { useParams } from 'react-router-dom';
 import productData from '../productinfo.json';
 import { useState } from 'react';
 import { FaHeart } from "react-icons/fa";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 
-const API_KEY = process.env.GOOGLE_API_KEY; 
+
+const API_KEY = import.meta.env.GOOGLE_API_KEY; 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 async function run(prompt, callback) {

@@ -20,6 +20,7 @@ export default function Product() {
           price={`$${product.price}`}
           description={product.briefDescription}
           image={product.imageLink}
+          productId={product.id}
         />
       ))}
     </div>
@@ -31,7 +32,7 @@ const ProductCatalogue = (props) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/product/${props.id}`);
+    navigate(`/product/${props.productId}`);
   };
 
   return (

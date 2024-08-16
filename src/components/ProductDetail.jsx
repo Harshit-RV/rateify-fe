@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import productData from '../productinfo.json';
-import { useState } from 'react';
 import { FaHeart } from "react-icons/fa";
+import axios from 'axios'
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { BiSolidUpvote } from "react-icons/bi";
 import { BiSolidDownvote } from "react-icons/bi";
@@ -215,7 +215,7 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
             <input
               type="text"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
-              placeholder="Enter a prompt for AI to generate a review..."
+              placeholder="Enter keywords to revamp your review using AI..."
               value={aiPrompt}
               onChange={(e) => setAIPrompt(e.target.value)}
             />
@@ -243,7 +243,7 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
               onClick={handleManualSubmit}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
             >
-              Submit Manual Review
+              Submit Review
             </button>
           </div>
         </div>
@@ -252,49 +252,68 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
   };
   
 const WriteReview = () => {
-  const [showPopup, setShowPopup] = useState(false);
-
-  const handlePopupOpen = () => {
-    setShowPopup(true);
-  };
-
-  const handlePopupClose = () => {
-    setShowPopup(false);
-  };
-
-  const handleGenerateAIReview = async (prompt) => {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    const apiUrl = 'https://api.gemini.ai/generateReview'; 
-
-    const response = await axios.post(apiUrl, {
-      prompt: prompt,
-    }, {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return response.data.reviewText; 
-  };
-
-  return (
-    <div className='text-sm'>
-      <button
-        onClick={handlePopupOpen}
-        className="bg-[#F47321] text-white px-6 py-2 rounded-lg hover:bg-[#F47321]/70 transition duration-300"
-      >
-        Write a Review
-      </button>
-
-      <ReviewPopup
-        show={showPopup}
-        onClose={handlePopupClose}
-        onGenerateAIReview={handleGenerateAIReview}
-      />
-    </div>
-  );
-};
+    const [showPopup, setShowPopup] = useState(false);
   
+    const handlePopupOpen = () => {
+      setShowPopup(true);
+    };
+  
+    const handlePopupClose = () => {
+      setShowPopup(false);
+    };
+
+    const { id } = useParams();
+    const product = productData[id];
+
+    const handleGenerateAIReview = async (prompt) => {
+      const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+  
+      if (!API_KEY) {
+        console.error("Missing Google API Key");
+        return;
+      }
+  
+      const genAI = new GoogleGenerativeAI(API_KEY);
+  
+      async function run(prompt) {
+        try {
+          const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+          const productPrompt = `Write a review of the ${product.productName} focusing on its ${product.featureParagraph.slice(0, 30)}...`; // Truncate feature paragraph for brevity
+          const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
+          const result = await model.generateContent(combinedPrompt);
+  
+          const response = result.response;
+          if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
+            const generatedText = response.candidates[0].content.parts.map(part => part.text).join("\n");
+            console.log("Generated Text:", generatedText);
+            return generatedText;
+          } else {
+            console.log("No valid response structure found.");
+          }
+        } catch (error) {
+          console.error("Error generating content:", error);
+        }
+      }
+  
+      return await run(prompt);
+    };
+
+    return (
+      <div>
+        <button
+          onClick={handlePopupOpen}
+          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+        >
+          Write a Review
+        </button>
+  
+        <ReviewPopup
+          show={showPopup}
+          onClose={handlePopupClose}
+          onGenerateAIReview={handleGenerateAIReview}
+        />
+      </div>
+    );
+  };
 
 export default ProductDetail;

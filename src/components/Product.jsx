@@ -52,7 +52,7 @@ const ProductCatalogue = (props) => {
         <div className="flex items-center justify-between mt-2.5">
           <div 
             onClick={handleClick} 
-            className="bg-black py-3 w-full rounded-xl flex items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300"
+            className="bg-[#004C91] py-3 w-full rounded-xl flex items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300"
           >
             Check it out
             <FaArrowRight className="text-xl ml-2" />

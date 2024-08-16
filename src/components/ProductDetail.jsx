@@ -66,13 +66,13 @@ const ProductDetail = () => {
             </div>
             <p className="text-md mb-6">{product.featureParagraph}</p>
             <div className='flex flex-row gap-4 items-center'>
-                <div className='bg-[#007dc6] py-3 rounded-xl mt-2.5 w-80 flex flex-row gap-2 items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300'>
+                <div className='bg-[#004C91] py-3 rounded-xl  w-80 flex flex-row gap-2 items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300'>
                     Add to Cart
                 </div>
                 <FaHeart
                     size={35}
                     onClick={handleClick}
-                    style={{ fill: isLiked ? 'red' : 'gray' }}
+                    style={{ fill: isLiked ? 'red' : 'black' }}
                     className="transition-colors duration-300 hover:fill-red-500 cursor-pointer"
                 />
             </div>

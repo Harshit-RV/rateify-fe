@@ -1,5 +1,6 @@
 [
-    {
+    {   
+        "id": "100001",
         "productName": "Apple iPhone 13",
         "briefDescription": "Apple iPhone 13 with A15 Bionic chip and 5G capabilities.",
         "price": 799,
@@ -8,6 +9,7 @@
         "imageLink": "https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_UF1000,1000_QL80_.jpg"
     },
     {
+        "id": "100002",
         "productName": "Samsung 55\" QLED 4K Smart TV",
         "briefDescription": "Samsung 55-inch QLED 4K Smart TV with Quantum Dot technology.",
         "price": 899,
@@ -16,6 +18,7 @@
         "imageLink": "https://images.samsung.com/is/image/samsung/p6pim/in/qa55q60daulxl/gallery/in-qled-q60d-qa55q60daulxl-539976106?$650_519_PNG$"
     },
     {
+        "id": "100003",
         "productName": "Ninja Professional Blender",
         "briefDescription": "Ninja Professional Blender with 1000-Watt base and Total Crushing Technology.",
         "price": 99,
@@ -24,6 +27,7 @@
         "imageLink": "https://m.media-amazon.com/images/I/51K1HjDQ4BL._AC_UF894,1000_QL80_.jpg"
     },
     {
+        "id": "100004",
         "productName": "Dyson V11 Cordless Vacuum Cleaner",
         "briefDescription": "Dyson V11 Cordless Vacuum Cleaner with powerful suction and intelligent cleaning modes.",
         "price": 599,
@@ -32,6 +36,7 @@
         "imageLink": "https://rukminim2.flixcart.com/image/720/864/kk8mcnk0/vacuum-cleaner/q/6/d/v11-absolute-pro-dyson-original-imafzmhydfxzqvnz.jpeg?q=60&crop=false"
     },
     {
+        "id": "100005",
         "productName": "Instant Pot Duo 7-in-1 Electric Pressure Cooker",
         "briefDescription": "Instant Pot Duo 7-in-1 Electric Pressure Cooker with 14 one-touch programs.",
         "price": 89,
@@ -40,6 +45,7 @@
         "imageLink": "https://images-cdn.ubuy.co.in/63eed035df3e5717a56bc995-instant-pot-duo-7-in-1-electric-pressure.jpg"
     },
     {
+        "id": "100006",
         "productName": "Fitbit Charge 5",
         "briefDescription": "Fitbit Charge 5 Advanced Fitness & Health Tracker with built-in GPS.",
         "price": 149,
@@ -48,6 +54,7 @@
         "imageLink": "https://m.media-amazon.com/images/I/61PmMzYM4qL.jpg"
     },
     {
+        "id": "100007",
         "productName": "Keurig K-Elite Coffee Maker",
         "briefDescription": "Keurig K-Elite Single Serve Coffee Maker with iced coffee setting.",
         "price": 139,
@@ -56,6 +63,7 @@
         "imageLink": "https://m.media-amazon.com/images/I/512UJ-Dz8sL._AC_UF894,1000_QL80_.jpg"
     },
     {
+        "id": "100008",
         "productName": "Sony WH-1000XM4 Wireless Noise-Cancelling Headphones",
         "briefDescription": "Sony WH-1000XM4 Over-Ear Wireless Noise-Cancelling Headphones.",
         "price": 349,

@@ -4,6 +4,29 @@ import productData from '../productinfo.json';
 import { useState } from 'react';
 import { FaHeart } from "react-icons/fa";
 
+
+const API_KEY = process.env.GOOGLE_API_KEY; 
+const genAI = new GoogleGenerativeAI(API_KEY);
+
+async function run(prompt, callback) {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const result = await model.generateContent(prompt);
+    
+    const response = result.response;
+    if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
+      const generatedText = marked(response.candidates[0].content.parts.map(part => part.text).join("\n"));
+      console.log("Generated Text:", generatedText);
+      callback(generatedText); 
+    } else {
+      console.log("No valid response structure found.");
+    }
+  } catch (error) {
+    console.error("Error generating content:", error);
+  }
+}
+
+
 const ProductDetail = () => {
   const { id } = useParams(); 
   const product = productData[id]; 

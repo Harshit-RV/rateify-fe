@@ -1,5 +1,5 @@
 import React from 'react'
-import { whatsMyAddress, check, getUserUpvotes, getUserDownvotes, upvoteFeedback, downvoteProductFeedback, getBalance, addProductFeedback, getProductFeedback } from '../lib/Web3'
+import Product from './Product'
 
 const address = '0xFaaeC23fc39F082bC45834ca01B89c6808D6C5a0';
 export default function Home() {
@@ -28,20 +28,18 @@ export default function Home() {
 
 
   return (
-    <div>
-      Home
-      <div className='bg-green-500 h-10 w-20'></div>
-      <div className='flex flex-col gap-3'>
-        <button onClick={() => whatsMyAddress(address)}>what is my fucking address</button>
-        <button onClick={() => getBalance(address)} className='border border-black '>balance</button>
-        <button onClick={() => addProductFeedback(address)} className='border border-black '>final add rating</button>
-        <button onClick={() => getProductFeedback(address)} className='border border-black '>final get rating</button>
-        <button onClick={() => upvoteFeedback(address, "0xFaaeC23fc39F082bC45834ca01B89c6808D6C5a0")} className='border border-black '>upvote</button>
-        <button onClick={() => downvoteProductFeedback(address,  "0xFaaeC23fc39F082bC45834ca01B89c6808D6C5a0")} className='border border-black '>downvote</button>
-        <button onClick={() => getUserDownvotes(address)} className='border border-black '>my downvotes</button>
-        <button onClick={() => getUserUpvotes(address)} className='border border-black '>my upvotes</button>
-        <button onClick={() => check(address, "0xFaaeC23fc39F082bC45834ca01B89c6808D6C5a0")} className='border border-black '>check</button>
-      </div>
+    <div className=''>
+     
+     <div className='bg-[#FFC220] p-10 rounded-lg m-10 drop-shadow-sm justify-between justify-content items-center text-xl font-bold text-orange-800 '>
+        <div>Ace The Assignment with our brand new notebooks</div>
+     </div>
+
+     <Product/>
+     
     </div>
   )
+}
+
+function product(){
+    
 }

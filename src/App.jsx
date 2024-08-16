@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route}  from 'react-router-dom'
+import { RedirectToSignIn, SignedIn, SignedOut} from "@clerk/clerk-react";
+import { SignInPage } from "./components/SignIn.jsx";
+import { SignUpPage } from "./components/SignUp";
 import Home from "./components/Home.jsx"
 import Favourites from "./components/Favourites.jsx"
 import Profile from "./components/Profile.jsx"
-import Product from "./components/Product.jsx"
 import Navbar from "./components/Navbar.jsx"
-
-
+import MyReviews from "./components/MyReviews.jsx"
+import ProductDetail from './components/ProductDetail.jsx'
 
 function App() {
 
@@ -22,10 +24,13 @@ function App() {
 
    <Routes>
 
-      <Route path="/" element={<Home />} />
-      <Route path="/favorites" element={<Favourites/>} />
+   <Route path="/" element= { <ProtectedRoute child={<Home/>} /> }/>
+      <Route path="/favourites" element={<Favourites/>} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/:id" element={<Product />} />
+      <Route path="/sign-in" element={<SignInPage/>} />
+      <Route path="/sign-up" element={<SignUpPage/>} />
+      <Route path = "/myreviews" element= {<MyReviews/>}/>
+      <Route path="/product/:id" element={<ProductDetail />} />
 
    </Routes>
 
@@ -36,5 +41,17 @@ function App() {
     </>
   )
 }
+
+const ProtectedRoute = ({ child }) => {
+  return (
+    <>
+    <SignedIn> {child} </SignedIn>
+
+    <SignedOut> 
+      <RedirectToSignIn />
+    </SignedOut>
+    </>
+  );
+};
 
 export default App

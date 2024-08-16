@@ -8,27 +8,10 @@ import { BiSolidUpvote } from "react-icons/bi";
 import { BiSolidDownvote } from "react-icons/bi";
 import { getProductFeedback } from '../lib/Web3';
 
-const API_KEY = import.meta.env.GOOGLE_API_KEY; 
-const genAI = new GoogleGenerativeAI(API_KEY);
+// const API_KEY = import.meta.env.GOOGLE_API_KEY; 
+// const genAI = new GoogleGenerativeAI(API_KEY);
 const profileImage = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
-async function run(prompt, callback) {
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-    const result = await model.generateContent(prompt);
-    
-    const response = result.response;
-    if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
-      const generatedText = marked(response.candidates[0].content.parts.map(part => part.text).join("\n"));
-      console.log("Generated Text:", generatedText);
-      callback(generatedText); 
-    } else {
-      console.log("No valid response structure found.");
-    }
-  } catch (error) {
-    console.error("Error generating content:", error);
-  }
-}
 
 function getProductById(id) {
   return productData.find(product => product.id === id) || null;
@@ -275,45 +258,40 @@ const WriteReview = () => {
     const product = getProductById(id); 
 
     const handleGenerateAIReview = async (prompt) => {
-  const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-
-  if (!API_KEY) {
-    console.error("Missing Google API Key");
-    return;
-  }
-
-  const genAI = new GoogleGenerativeAI(API_KEY);
-
-  async function run(prompt) {
-    try {
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+        const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
       
-      const productPrompt = `Write a review of the ${product.productName} focusing on its ${product.featureParagraph.slice(0, 30)}...`; 
-      const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
-      const result = await model.generateContent(combinedPrompt);
-
-      const response = result.response;
-      if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
-        let generatedText = response.candidates[0].content.parts.map(part => part.text).join("\n");
-        
-        // Manually limit the text to 100 words
-        const words = generatedText.split(" ");
-        if (words.length > 100) {
-          generatedText = words.slice(0, 100).join(" ") + "...";
+        if (!API_KEY) {
+          console.error("Missing Google API Key");
+          return;
         }
-
-        console.log("Generated Text:", generatedText);
-        return generatedText;
-      } else {
-        console.log("No valid response structure found.");
-      }
-    } catch (error) {
-      console.error("Error generating content:", error);
-    }
-  }
-
-  return await run(prompt);
-};
+      
+        const genAI = new GoogleGenerativeAI(API_KEY);
+      
+        async function run(prompt) {
+          try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+      
+            // Prompt to generate a review with a limit of 100 words
+            const productPrompt = `Write a review of the ${product.productName} focusing on its ${product.featureParagraph.slice(0, 30)}. Keep the review under 100 words.`;
+      
+            const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
+            const result = await model.generateContent(combinedPrompt);
+      
+            const response = result.response;
+            if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
+              const generatedText = response.candidates[0].content.parts.map(part => part.text).join("\n");
+              console.log("Generated Text:", generatedText);
+              return generatedText;
+            } else {
+              console.log("No valid response structure found.");
+            }
+          } catch (error) {
+            console.error("Error generating content:", error);
+          }
+        }
+      
+        return await run(prompt);
+      };      
   
 
     return (

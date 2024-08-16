@@ -24,6 +24,7 @@ const ProductDetail = () => {
   const product = getProductById(id); 
   const [isLiked, setIsLiked] = useState(false);
   const [ feedbacks, setFeedbacks ] = useState([]);
+  const [ avgRating, setAvgRating ] = useState(0);
 
   const handleClick = () => {
     setIsLiked(!isLiked);
@@ -36,8 +37,10 @@ const ProductDetail = () => {
   async function fetchFeedbacks() {
     const address = localStorage.getItem('address');
     const response = await getProductFeedback(address, id);
+    const rating = await parseInt(response.totalRating) / parseInt(response.ratingCount);
+    console.log('Rating:', rating);
+    setAvgRating(rating);
     setFeedbacks(response.feedbacks);
-    console.log('Feedbacks:', feedbacks);
   }
 
   useEffect(() => {
@@ -67,15 +70,17 @@ const ProductDetail = () => {
                   </div>
                   <h3>{`${product.discount}`}%</h3>
               </div>
-              <p className="text-md mb-6">{product.featureParagraph}</p>
-              <div className='flex flex-row gap-4 items-center'>
+              <p className="text-md mb-3">{product.featureParagraph}</p>
+              <AvrRating initialRating={Math.round(avgRating)}/>
+              <div className='flex flex-row gap-4 mt-4 items-center'>
+                  
                   <div className='bg-[#004C91] py-3 rounded-xl  w-80 flex flex-row gap-2 items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300'>
                       Add to Cart
                   </div>
                   <FaHeart
                       size={35}
                       onClick={handleClick}
-                      style={{ fill: isLiked ? 'red' : 'black' }}
+                      style={{ fill: isLiked ? 'red' : 'gray' }}
                       className="transition-colors duration-300 hover:fill-red-500 cursor-pointer"
                   />
               </div>
@@ -88,7 +93,7 @@ const ProductDetail = () => {
       </div>
       <div className='w-full bg-gray-50 px-24 mt-10 py-20'>
         <div className='flex justify-between w-full font-bold text-2xl mb-4'>
-          Reviews
+          Customer Ratings & Reviews
           <div className='flex justify-end gap-3'>
             <Metamask/>
             <WriteReview fetchFeedbacks={fetchFeedbacks} />
@@ -213,9 +218,6 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedba
 
     const handleClick = (newRating) => {
       setRating(newRating);
-      // if (onRatingChange) {
-      //   onRatingChange(newRating);
-      // }
     };
 
     const [aiReviewText, setAIReviewText] = useState(''); 
@@ -234,7 +236,6 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedba
       try {
         const response = await onGenerateAIReview(aiPrompt);
         console.log('Rating:', rating);
-        setReviewText(response);
         setAIReview(response);
         setAIReviewText(response); 
       } catch (error) {
@@ -244,6 +245,7 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedba
   
     const handleUseAIReview = () => {
       setReviewText(aiReviewText);
+      setAIReview('');
     };
   
     if (!show) {
@@ -359,8 +361,6 @@ const WriteReview = ({ fetchFeedbacks }) => {
       
             const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
             
-            await new Promise(resolve => setTimeout(resolve, 3000)); 
-
             const result = await model.generateContent(combinedPrompt);
       
             const response = result.response;
@@ -397,6 +397,7 @@ const WriteReview = ({ fetchFeedbacks }) => {
           onGenerateAIReview={handleGenerateAIReview}
           productId={id}
           fetchFeedbacks={fetchFeedbacks}
+          loading={loading}
         />
       </div>
     );
@@ -409,5 +410,20 @@ const WriteReview = ({ fetchFeedbacks }) => {
     </div>
   );
   
+
+  const AvrRating = ({ initialRating }) => {
+    return (
+      <div className="flex items-center cursor-pointer">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span
+            key={star}
+            className={`text-2xl ${initialRating >= star ? 'text-yellow-400' : 'text-gray-400'} transition-colors duration-200 ease-in-out`}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+    );
+  };
 
 export default ProductDetail;

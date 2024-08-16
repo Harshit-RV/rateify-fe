@@ -43,7 +43,7 @@ function Metamask() {
         // setEthBalance(web3.utils.fromWei(ethBalance, 'ether')); 
 
         setIsConnected(true);
-        toast.success('Always at the bottom.', {
+        toast.success('Wallet connected', {
           position: "top-right"
         })
       }

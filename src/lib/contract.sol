@@ -13,6 +13,7 @@ contract TokenContract {
         uint upvotes;
         uint downvotes;
         address user;
+        string productId;
     }
 
     struct ProductFeedback {
@@ -31,6 +32,18 @@ contract TokenContract {
     }
 
     function addProductFeedback(string memory productId, string memory feedback, string memory rating) public returns (bool) {
+        bool productExists = false;
+        for (uint i = 0; i < productsList.length; i++) {
+            if (compareStrings(productsList[i], productId)) {
+                productExists = true;
+                break;
+            }
+        }
+
+        if (!productExists) {
+            productsList.push(productId);
+        }
+        
         feedbacks[productId].totalRating += st2num(rating);
         feedbacks[productId].ratingCount += 1;
 
@@ -39,7 +52,8 @@ contract TokenContract {
             upvotes: 0,
             downvotes: 0,
             rating: st2num(rating),
-            user: msg.sender
+            user: msg.sender,
+            productId: productId
         });
 
         feedbacks[productId].feedbacks.push(newFeedback);
@@ -84,7 +98,39 @@ contract TokenContract {
         return downvotes[msg.sender];
     }
 
-    
+    function getFeedbacksByUser() public view returns (Feedback[] memory) {
+        uint feedbackCount = 0;
+
+        for (uint i = 0; i < productsList.length; i++) {
+            string memory productId = productsList[i];
+            ProductFeedback storage productFeedback = feedbacks[productId];
+
+            for (uint j = 0; j < productFeedback.feedbacks.length; j++) {
+                if (productFeedback.feedbacks[j].user == msg.sender) {
+                    feedbackCount++;
+                }
+            }
+        }
+
+        Feedback[] memory result = new Feedback[](feedbackCount);
+
+        uint index = 0;
+        for (uint i = 0; i < productsList.length; i++) {
+            string memory productId = productsList[i];
+            ProductFeedback storage productFeedback = feedbacks[productId];
+
+            for (uint j = 0; j < productFeedback.feedbacks.length; j++) {
+                if (productFeedback.feedbacks[j].user == msg.sender) {
+                    result[index] = productFeedback.feedbacks[j];
+                    index+=1;
+                }
+            }
+        }
+
+        return result;
+    }
+
+
 
     function compareStrings(string memory a, string memory b) internal pure returns (bool) {
         return (keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b)));

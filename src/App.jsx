@@ -33,7 +33,6 @@ function App() {
       <Route path="/sign-up" element={<SignUpPage/>} />
       <Route path = "/myreviews" element= {<MyReviews/>}/>
       <Route path="/product/:id" element={<ProductDetail />} />
-      <Route path="/metamask" element={<Metamask/>} />
 
    </Routes>
 

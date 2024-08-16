@@ -8,28 +8,12 @@ import { BiSolidUpvote } from "react-icons/bi";
 import { BiSolidDownvote } from "react-icons/bi";
 import { getProductFeedback } from '../lib/Web3';
 import Metamask from './Metamask';
+import StarRating from './StarRating';
 
-const API_KEY = import.meta.env.GOOGLE_API_KEY; 
-const genAI = new GoogleGenerativeAI(API_KEY);
+// const API_KEY = import.meta.env.GOOGLE_API_KEY; 
+// const genAI = new GoogleGenerativeAI(API_KEY);
 const profileImage = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
-async function run(prompt, callback) {
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-    const result = await model.generateContent(prompt);
-    
-    const response = result.response;
-    if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
-      const generatedText = marked(response.candidates[0].content.parts.map(part => part.text).join("\n"));
-      console.log("Generated Text:", generatedText);
-      callback(generatedText); 
-    } else {
-      console.log("No valid response structure found.");
-    }
-  } catch (error) {
-    console.error("Error generating content:", error);
-  }
-}
 
 function getProductById(id) {
   return productData.find(product => product.id === id) || null;
@@ -216,8 +200,11 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-lg">
-          <h2 className="text-xl font-bold mb-4">Write a Review</h2>
-          <div className="mb-4">
+          <div className='flex justify-content justify-between items-center justify-items-center'>
+          <h2 className="text-xl font-bold">Write a Review</h2>
+          <StarRating  />
+          </div>
+          <div className="mb-4 mt-4">
             <textarea
               className="w-full h-24 p-2 border font-light border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Write your review here..."
@@ -281,37 +268,41 @@ const WriteReview = () => {
     const product = getProductById(id); 
 
     const handleGenerateAIReview = async (prompt) => {
-      const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-  
-      if (!API_KEY) {
-        console.error("Missing Google API Key");
-        return;
-      }
-  
-      const genAI = new GoogleGenerativeAI(API_KEY);
-  
-      async function run(prompt) {
-        try {
-          const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-          const productPrompt = `Write a review of the ${product.productName} focusing on its ${product.featureParagraph.slice(0, 30)}...`; // Truncate feature paragraph for brevity
-          const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
-          const result = await model.generateContent(combinedPrompt);
-  
-          const response = result.response;
-          if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
-            const generatedText = response.candidates[0].content.parts.map(part => part.text).join("\n");
-            console.log("Generated Text:", generatedText);
-            return generatedText;
-          } else {
-            console.log("No valid response structure found.");
-          }
-        } catch (error) {
-          console.error("Error generating content:", error);
+        const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+      
+        if (!API_KEY) {
+          console.error("Missing Google API Key");
+          return;
         }
-      }
+      
+        const genAI = new GoogleGenerativeAI(API_KEY);
+      
+        async function run(prompt) {
+          try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+      
+            // Prompt to generate a review with a limit of 100 words
+            const productPrompt = `Write a review of the ${product.productName} focusing on its ${product.featureParagraph.slice(0, 30)}. Keep the review under 100 words.`;
+      
+            const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
+            const result = await model.generateContent(combinedPrompt);
+      
+            const response = result.response;
+            if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
+              const generatedText = response.candidates[0].content.parts.map(part => part.text).join("\n");
+              console.log("Generated Text:", generatedText);
+              return generatedText;
+            } else {
+              console.log("No valid response structure found.");
+            }
+          } catch (error) {
+            console.error("Error generating content:", error);
+          }
+        }
+      
+        return await run(prompt);
+      };      
   
-      return await run(prompt);
-    };
 
     return (
       <div className='text-sm'>
@@ -321,6 +312,8 @@ const WriteReview = () => {
         >
           Write a Review
         </button>
+
+        
   
         <ReviewPopup
           show={showPopup}

@@ -1,33 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import productData from '../productinfo.json';
-import { useState } from 'react';
 import { FaHeart } from "react-icons/fa";
+import axios from 'axios'
 import { GoogleGenerativeAI } from "@google/generative-ai";
-
-
-
-const API_KEY = import.meta.env.GOOGLE_API_KEY; 
-const genAI = new GoogleGenerativeAI(API_KEY);
-
-async function run(prompt, callback) {
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-    const result = await model.generateContent(prompt);
-    
-    const response = result.response;
-    if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
-      const generatedText = marked(response.candidates[0].content.parts.map(part => part.text).join("\n"));
-      console.log("Generated Text:", generatedText);
-      callback(generatedText); 
-    } else {
-      console.log("No valid response structure found.");
-    }
-  } catch (error) {
-    console.error("Error generating content:", error);
-  }
-}
-
 
 const ProductDetail = () => {
   const { id } = useParams(); 
@@ -65,18 +41,20 @@ const ProductDetail = () => {
                 <h3>{`${product.discount}`}%</h3>
             </div>
             <p className="text-md mb-6">{product.featureParagraph}</p>
-            <div className='flex flex-row gap-4 items-center'>
+            <div className='flex flex-row gap-4 items-center mb-4'>
                 <div className='bg-[#004C91] py-3 rounded-xl  w-80 flex flex-row gap-2 items-center justify-center text-white hover:cursor-pointer hover:bg-gray-700 active:bg-gray-600 transition-colors duration-300'>
                     Add to Cart
                 </div>
                 <FaHeart
                     size={35}
                     onClick={handleClick}
-                    style={{ fill: isLiked ? 'red' : 'black' }}
+                    style={{ fill: isLiked ? 'red' : 'gray' }}
                     className="transition-colors duration-300 hover:fill-red-500 cursor-pointer"
                 />
             </div>
-            <WriteReview />
+            <div >
+                <WriteReview />
+            </div>
         </div>
       </div>
     </div>
@@ -124,7 +102,7 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
             <input
               type="text"
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
-              placeholder="Enter a prompt for AI to generate a review..."
+              placeholder="Enter keywords to revamp your review using AI..."
               value={aiPrompt}
               onChange={(e) => setAIPrompt(e.target.value)}
             />
@@ -152,7 +130,7 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
               onClick={handleManualSubmit}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
             >
-              Submit Manual Review
+              Submit Review
             </button>
           </div>
         </div>
@@ -160,7 +138,7 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
     );
   };
   
-  const WriteReview = () => {
+const WriteReview = () => {
     const [showPopup, setShowPopup] = useState(false);
   
     const handlePopupOpen = () => {
@@ -170,23 +148,43 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
     const handlePopupClose = () => {
       setShowPopup(false);
     };
-  
+
+    const { id } = useParams();
+    const product = productData[id];
+
     const handleGenerateAIReview = async (prompt) => {
-        const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      const apiUrl = 'https://api.gemini.ai/generateReview'; 
+      const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
   
-      const response = await axios.post(apiUrl, {
-        prompt: prompt,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      if (!API_KEY) {
+        console.error("Missing Google API Key");
+        return;
+      }
   
-      return response.data.reviewText; 
+      const genAI = new GoogleGenerativeAI(API_KEY);
+  
+      async function run(prompt) {
+        try {
+          const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+          const productPrompt = `Write a review of the ${product.productName} focusing on its ${product.featureParagraph.slice(0, 30)}...`; // Truncate feature paragraph for brevity
+          const combinedPrompt = prompt ? `${prompt}. ${productPrompt}` : productPrompt;
+          const result = await model.generateContent(combinedPrompt);
+  
+          const response = result.response;
+          if (response && response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
+            const generatedText = response.candidates[0].content.parts.map(part => part.text).join("\n");
+            console.log("Generated Text:", generatedText);
+            return generatedText;
+          } else {
+            console.log("No valid response structure found.");
+          }
+        } catch (error) {
+          console.error("Error generating content:", error);
+        }
+      }
+  
+      return await run(prompt);
     };
-  
+
     return (
       <div>
         <button
@@ -204,6 +202,5 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
       </div>
     );
   };
-  
 
 export default ProductDetail;

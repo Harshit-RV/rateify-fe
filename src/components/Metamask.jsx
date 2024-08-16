@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { FaWallet } from "react-icons/fa";
+import { toast } from 'react-hot-toast';
 
 import Web3 from 'web3';
 
 function Metamask() {
   const [isConnected, setIsConnected] = useState(false);
-  const [ethBalance, setEthBalance] = useState("");
 
   const detectCurrentProvider = () => {
     if (window.ethereum) {
@@ -43,6 +43,9 @@ function Metamask() {
         // setEthBalance(web3.utils.fromWei(ethBalance, 'ether')); 
 
         setIsConnected(true);
+        toast.success('Always at the bottom.', {
+          position: "top-right"
+        })
       }
     } catch (err) {
       console.log("Error connecting to Metamask:", err);

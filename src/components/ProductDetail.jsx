@@ -51,8 +51,10 @@ const ProductDetail = () => {
 
   useEffect(() => {
     async function fetchFeedbacks() {
-        const response = await getProductFeedback('address', id);
+        const address = localStorage.getItem('address');
+        const response = await getProductFeedback(address, id);
         setFeedbacks(response);
+        console.log(feedbacks);
     }
     fetchFeedbacks();
   }, []);

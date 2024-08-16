@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar.jsx"
 import MyReviews from "./components/MyReviews.jsx"
 import ProductDetail from './components/ProductDetail.jsx'
 import Metamask from './components/Metamask.jsx'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
 
@@ -18,7 +19,7 @@ function App() {
 
 
       <div>
-
+        <Toaster/>
        <BrowserRouter>
 
    <Navbar />

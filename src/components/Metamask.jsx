@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { FaWallet } from "react-icons/fa";
+
 import Web3 from 'web3';
 
 function Metamask() {
@@ -53,39 +55,22 @@ function Metamask() {
   };
 
   return (
-    <div className="app">
-      <div className='flex justify-center pb-10 pt-[20vh]'>
-        {/* Metamask logo */}
-        <svg xmlns="http://www.w3.org/2000/svg" width="100" fill="none" viewBox="0 0 50 48" id="metamask">
-          {/* SVG paths here */}
-        </svg>
-      </div>
-      <div className='flex justify-center'>
-        <div className='text-3xl font-semibold'>Authentication through Metamask Wallet</div>
-      </div>
-
-      <div className="app-wrapper">
+    <div className="text-sm">
         {!isConnected ? (
-          <div className='flex items-center justify-content justify-center pb-[50vh] pt-[5vh]'>
-            <button className="app-button__login px-14 py-2 rounded-sm font-semibold bg-purple-800 text-white w-[30vh]" onClick={onConnect}>
-              Login
+          <div className='flex items-center justify-content justify-center'>
+            <button className="app-button__login px-5 rounded-lg py-2 font-semibold bg-[#007DC6] hover:bg-[#007DC6]/70 text-white" onClick={onConnect}>
+              Connect Wallet
             </button>
           </div>
         ) : (
-          <div className="app-wrapper">
-            <div className="app-details flex justify-center text-2xl font-medium pt-10">
-              <h2>You are connected to Metamask.</h2>
-            </div>
-           
-            <div className='flex justify-center text-lg p-[5vh] pb-[25vh]'>
-              <button className="app-buttons__logout bg-red-600 text-white font-semibold px-4 py-2 rounded-lg" onClick={onDisconnect}>
-                Disconnect
-              </button>
-            </div>
+          <div className='flex items-center justify-content justify-center'>
+            <button className="app-button__login flex items-center px-5 rounded-lg py-2 font-semibold bg-red-500 hover:bg-red-700 text-white" onClick={onDisconnect}>
+              <FaWallet className='mr-2'/>
+              Disconnect
+            </button>
           </div>
         )}
       </div>
-    </div>
   );
 }
 

@@ -7,6 +7,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { BiSolidUpvote } from "react-icons/bi";
 import { BiSolidDownvote } from "react-icons/bi";
 import { getProductFeedback } from '../lib/Web3';
+import Metamask from './Metamask';
 
 const API_KEY = import.meta.env.GOOGLE_API_KEY; 
 const genAI = new GoogleGenerativeAI(API_KEY);
@@ -101,7 +102,10 @@ const ProductDetail = () => {
       <div className='w-full bg-gray-50 px-24 mt-10 py-20'>
         <div className='flex justify-between w-full font-bold text-2xl mb-4'>
           Reviews
-          <WriteReview />
+          <div className='flex justify-end gap-3'>
+            <Metamask/>
+            <WriteReview />
+          </div>
         </div>
         <div className='w-full bg-gray-50 grid gap-6 grid-cols-3'>
           <ReviewCard imageUrl={product.imageLink} rating={5} reviewText={'This is a great product. I love it! '} />

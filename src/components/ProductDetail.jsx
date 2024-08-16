@@ -6,9 +6,9 @@ import axios from 'axios'
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { BiSolidUpvote } from "react-icons/bi";
 import { BiSolidDownvote } from "react-icons/bi";
-import { getProductFeedback } from '../lib/Web3';
+import { getProductFeedback, addProductFeedback, upvoteFeedback, downvoteProductFeedback } from '../lib/Web3';
 import Metamask from './Metamask';
-import StarRating from './StarRating';
+import { toast } from 'react-hot-toast';
 
 // const API_KEY = import.meta.env.GOOGLE_API_KEY; 
 // const genAI = new GoogleGenerativeAI(API_KEY);
@@ -33,13 +33,14 @@ const ProductDetail = () => {
     return <div>Product not found</div>;
   }
 
+  async function fetchFeedbacks() {
+    const address = localStorage.getItem('address');
+    const response = await getProductFeedback(address, id);
+    setFeedbacks(response.feedbacks);
+    console.log('Feedbacks:', feedbacks);
+  }
+
   useEffect(() => {
-    async function fetchFeedbacks() {
-        const address = localStorage.getItem('address');
-        const response = await getProductFeedback(address, id);
-        setFeedbacks(response);
-        console.log(feedbacks);
-    }
     fetchFeedbacks();
   }, []);
 
@@ -90,26 +91,31 @@ const ProductDetail = () => {
           Reviews
           <div className='flex justify-end gap-3'>
             <Metamask/>
-            <WriteReview />
+            <WriteReview fetchFeedbacks={fetchFeedbacks} />
           </div>
         </div>
         <div className='w-full bg-gray-50 grid gap-6 grid-cols-3'>
-          <ReviewCard imageUrl={product.imageLink} rating={5} reviewText={'This is a great product. I love it! '} />
-          <ReviewCard imageUrl={product.imageLink} rating={5} reviewText={'This is a great product. I love it!'} />
-          <ReviewCard imageUrl={product.imageLink} rating={5} reviewText={'This is a great product. I love it!'} />
-          <ReviewCard imageUrl={product.imageLink} rating={5} reviewText={'This is a great product. I love it!'} />
-          <ReviewCard imageUrl={product.imageLink} rating={5} reviewText={'This is a great product. I love it!'} />
+          {
+            feedbacks.map((feedback, index) => (
+              <ReviewCard 
+                key={index} 
+                upvotes={parseInt(feedback.upvotes)}
+                downvotes={parseInt(feedback.downvotes)}
+                fetchFeedbacks={fetchFeedbacks} 
+                rating={parseInt(feedback.rating)} 
+                reviewText={feedback.feedbackText} 
+                op={feedback.user} 
+              />
+            ))
+          }
         </div>
-        {/* <FeedbackComponent /> */}
         </div>
     </div>
   );
 };
 
-const ReviewCard = ({ imageUrl, rating, reviewText }) => {
-
-  const [upvotes, setUpvotes] = useState(0);
-  const [downvotes, setDownvotes] = useState(0);
+const ReviewCard = ({ rating, reviewText, op, upvotes, downvotes, fetchFeedbacks }) => {
+  const { id } = useParams();
   
   const renderStars = () => {
     let stars = [];
@@ -128,11 +134,36 @@ const ReviewCard = ({ imageUrl, rating, reviewText }) => {
     return stars;
   };
 
+  const upvote = async () => {
+    const address = localStorage.getItem('address');
+
+    if (!address) {
+      toast.error('Please connect your wallet to upvote');
+      return;
+    }
+
+    await upvoteFeedback(address, id, op);
+    fetchFeedbacks();
+
+  }
+
+  const downvote = async () => {
+    const address = localStorage.getItem('address');
+
+    if (!address) {
+      toast.error('Please connect your wallet to upvote');
+      return;
+    }
+
+    await downvoteProductFeedback(address, id, op);
+    fetchFeedbacks();
+  }
+
   return (
       <>
     <div className="flex flex-col items-start bg-white p-6 gap-4 shadow-sm rounded-lg w-full">
       <div className="w-full flex justify-start items-center">
-        <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+        <a target="_blank" rel="noopener noreferrer">
             <img
                 src={profileImage}
                 alt="Review"
@@ -153,7 +184,7 @@ const ReviewCard = ({ imageUrl, rating, reviewText }) => {
       <div className="flex justify-end items-center gap-3">
         <button
           className="flex items-center text-green-600 hover:text-green-800"
-          onClick={() => setUpvotes(upvotes + 1)}
+          onClick={upvote}
         >
         <BiSolidUpvote />
         {upvotes}
@@ -161,7 +192,7 @@ const ReviewCard = ({ imageUrl, rating, reviewText }) => {
 
         <button
           className="flex items-center text-red-700 hover:text-red-800"
-          onClick={() => setDownvotes(downvotes + 1)}
+          onClick={downvote}
         >
           <BiSolidDownvote/>
           {downvotes}
@@ -174,19 +205,35 @@ const ReviewCard = ({ imageUrl, rating, reviewText }) => {
 
 
 
-const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
+const ReviewPopup = ({ show, onClose, onGenerateAIReview, productId, fetchFeedbacks }) => {
     const [reviewText, setReviewText] = useState('');
     const [aiPrompt, setAIPrompt] = useState('');
     const [aiReview, setAIReview] = useState('');
+    const [rating, setRating] = useState(2);
+
+    const handleClick = (newRating) => {
+      setRating(newRating);
+      // if (onRatingChange) {
+      //   onRatingChange(newRating);
+      // }
+    };
+
   
-    const handleManualSubmit = () => {
+    const handleManualSubmit = async () => {
+      const address = localStorage.getItem('address');
+
       console.log('Manual Review:', reviewText);
+
+      await addProductFeedback(address, productId, reviewText, rating.toString());
+      fetchFeedbacks();
       onClose();
     };
   
     const handleAIPromptSubmit = async () => {
       try {
         const response = await onGenerateAIReview(aiPrompt);
+        console.log('Rating:', rating);
+        setReviewText(response);
         setAIReview(response);
       } catch (error) {
         console.error('Error generating AI review:', error);
@@ -202,7 +249,17 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
         <div className="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-lg">
           <div className='flex justify-content justify-between items-center justify-items-center'>
           <h2 className="text-xl font-bold">Write a Review</h2>
-          <StarRating  />
+          <div className="flex items-center cursor-pointer">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                className={`text-2xl ${rating >= star ? 'text-yellow-400' : 'text-gray-400'} transition-colors duration-200 ease-in-out`}
+                onClick={() => handleClick(star)}
+              >
+                ★
+              </span>
+            ))}
+          </div>
           </div>
           <div className="mb-4 mt-4">
             <textarea
@@ -253,7 +310,7 @@ const ReviewPopup = ({ show, onClose, onGenerateAIReview }) => {
     );
   };
   
-const WriteReview = () => {
+const WriteReview = ({ fetchFeedbacks }) => {
     const [showPopup, setShowPopup] = useState(false);
   
     const handlePopupOpen = () => {
@@ -312,13 +369,13 @@ const WriteReview = () => {
         >
           Write a Review
         </button>
-
-        
   
         <ReviewPopup
           show={showPopup}
           onClose={handlePopupClose}
           onGenerateAIReview={handleGenerateAIReview}
+          productId={id}
+          fetchFeedbacks={fetchFeedbacks}
         />
       </div>
     );

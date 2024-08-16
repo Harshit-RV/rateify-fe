@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaWallet } from "react-icons/fa";
 import { toast } from 'react-hot-toast';
 
@@ -56,6 +56,10 @@ function Metamask() {
     setIsConnected(false);
     localStorage.removeItem('address'); // Optionally clear the stored address
   };
+
+  useEffect(() => {
+    localStorage.getItem('address') && setIsConnected(true);
+  });
 
   return (
     <div className="text-sm">

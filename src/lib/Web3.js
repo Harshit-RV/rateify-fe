@@ -49,7 +49,8 @@ export const getProductFeedback = async (address, productId) => {
       gas: 20000000
 		});
 
-		console.log('Feedbacks: ', feedbacks);
+		return feedbacks;
+
 	} catch (error) {
 		console.error('Error getting feedbacks:', error);
 	}
@@ -91,6 +92,19 @@ export const upvoteFeedback = async (address, productId, op) => {
       gas: 2000000
 		});
 
+	} catch (error) {
+		console.error('Error upvoting:', error);
+	}
+}
+
+export const getReviewsOfCurrentUser = async (address) => {
+	try {
+		const feedbacks = await contract.methods.getFeedbacksByUser().call({
+			from: address,
+      gas: 200000000
+		});
+		console.log('My reviews:', feedbacks);
+		return feedbacks;
 	} catch (error) {
 		console.error('Error upvoting:', error);
 	}

@@ -1,72 +1,71 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { BiSolidUpvote } from "react-icons/bi";
 import { BiSolidDownvote } from "react-icons/bi";
+import { getReviewsOfCurrentUser } from '../lib/Web3';
+import toast from 'react-hot-toast';
+import productData from '../productinfo.json';
+import { useNavigate } from 'react-router-dom';
 
-
+function getProductImageUrl(productId) {
+  const product = productData.find(product => product.id === productId);
+  return product ? product.imageLink : "Product not found";
+}
 
 export default function MyReviews() {
+  const [ reviews, setReviews ] = useState([]);
+
+  const fetchReviews = async () => {
+    const address = localStorage.getItem('address');
+    if (!address) {
+      toast.error('Please connect your wallet to view your reviews');
+    }
+    const output = await getReviewsOfCurrentUser(address);
+    setReviews(output);
+  }
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
   return (
-    <>
+    <div>
 <div className='grid grid-cols-3 justify-items-center items-center text-center mx-[40vh] mt-20'>
 
     <div className='bg-[#367C2B] rounded-lg p-[4vh] text-white w-[28vh] h-[20vh] flex flex-col items-center justify-center mx-auto'>
     <div className='font-bold text-lg'>Total Reviews</div>
-    <div className='text-xl'>50</div>
+    <div className='text-xl'>{reviews.length}</div>
     </div>
 
     <div className='bg-[#367C2B] rounded-lg p-[4vh] text-white w-[28vh] h-[20vh] flex flex-col items-center justify-center mx-auto'>
     <div className='font-bold text-lg'>Total Earnings</div>
-    <div className='text-xl'>100$</div>
+    <div className='text-xl'>$3</div>
     </div>
 
     <div className='bg-[#367C2B] rounded-lg p-[4vh] text-white w-[28vh] h-[20vh] flex flex-col items-center justify-center mx-auto'>
     <div className='font-bold text-lg'>Redeem Earnings</div>
-    <div className='text-xl'>10$</div>
+    <div className='text-xl'>$1</div>
     </div>
 
 </div>
-
-    <div className='mt-10'>
-      <ReviewCard 
-        imageUrl="https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_UF1000,1000_QL80_.jpg" 
-        rating={4} 
-        reviewText="I've been using the iPhone for a few months now, and it has completely transformed how I interact with technology daily. The build quality is top-notch, with a sleek design that feels premium in the hand. The display is vibrant, with colors that pop and blacks that are deep and true. I love the camera setup—whether I'm taking photos in bright sunlight or low light, the results are consistently stunning."
-      />
+    {
+      reviews.map((review, index) => (
+        <div key={index} className='mt-10 px-32'>
+          <ReviewCard 
+            rating={parseInt(review.rating)} 
+            reviewText={review.feedbackText}
+            upvotes={parseInt(review.upvotes)}
+            downvotes={parseInt(review.downvotes)}
+            productId={review.productId}
+          />
+        </div>
+      ))
+    }
     </div>
-
-    <div className='mt-10'>
-      <ReviewCard 
-        imageUrl="https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_UF1000,1000_QL80_.jpg" 
-        rating={4} 
-        reviewText="I've been using the iPhone for a few months now, and it has completely transformed how I interact with technology daily. The build quality is top-notch, with a sleek design that feels premium in the hand. The display is vibrant, with colors that pop and blacks that are deep and true. I love the camera setup—whether I'm taking photos in bright sunlight or low light, the results are consistently stunning."
-      />
-    </div>
-
-    <div className='mt-10'>
-      <ReviewCard 
-        imageUrl="https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_UF1000,1000_QL80_.jpg" 
-        rating={4} 
-        reviewText="I've been using the iPhone for a few months now, and it has completely transformed how I interact with technology daily. The build quality is top-notch, with a sleek design that feels premium in the hand. The display is vibrant, with colors that pop and blacks that are deep and true. I love the camera setup—whether I'm taking photos in bright sunlight or low light, the results are consistently stunning."
-      />
-    </div>
-
-    <div className='mt-10'>
-      <ReviewCard 
-        imageUrl="https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_UF1000,1000_QL80_.jpg" 
-        rating={4} 
-        reviewText="I've been using the iPhone for a few months now, and it has completely transformed how I interact with technology daily. The build quality is top-notch, with a sleek design that feels premium in the hand. The display is vibrant, with colors that pop and blacks that are deep and true. I love the camera setup—whether I'm taking photos in bright sunlight or low light, the results are consistently stunning."
-      />
-    </div>
-
-    </>
   )
 }
 
-const ReviewCard = ({ imageUrl, rating, reviewText }) => {
+const ReviewCard = ({ rating, reviewText, upvotes, downvotes, productId }) => {
 
-    const [upvotes, setUpvotes] = useState(0);
-  const [downvotes, setDownvotes] = useState(0);
-    
     const renderStars = () => {
       let stars = [];
       for (let i = 1; i <= 5; i++) {
@@ -83,50 +82,47 @@ const ReviewCard = ({ imageUrl, rating, reviewText }) => {
       }
       return stars;
     };
+
+    const imageUrl = getProductImageUrl(productId)
+    const navigate = useNavigate();
   
     return (
         <>
-      <div className="flex items-center bg-white p-4 shadow-lg rounded-lg mx-[10vh]">
-        <div className="w-20 h-20">
-        <a href={imageUrl}  target="_blank" rel="noopener noreferrer">
+        <div className="flex items-center bg-white px-6 py-8 shadow-lg rounded-lg w-full hover:cursor-pointer" onClick={() => navigate(`/product/${productId}`)}>
           <img
             src={imageUrl}
             alt="Review"
-            className="w-full h-full object-cover rounded-lg"
+            className="max-w-24 h-full object-cover rounded-lg"
           />
-        </a>
-      </div>
   
-        <div className="ml-4 flex-1">
-          <div className="flex items-center mb-2">
-            {renderStars()}
+          <div className="ml-4 flex-1">
+            <div className="flex items-center mb-2">
+              {renderStars()}
+            </div>
+    
+            <div className="text-gray-700 w-[1000px]">
+              {reviewText}
+            </div>
           </div>
-  
-          <div className="text-gray-700 w-[1000px]">
-            {reviewText}
+      
+
+          <div className="flex items-center mt-4 mr-10 space-x-4">
+          <button
+            className="flex items-center text-green-600 hover:text-green-800"
+          >
+          <BiSolidUpvote />
+            {upvotes}
+          </button>
+
+          <button
+            className="flex items-center text-red-700 hover:text-red-800"
+          >
+          <BiSolidDownvote/>
+            {downvotes}
+          </button>
           </div>
         </div>
-     
-
-<div className="flex items-center mt-4 mr-10 space-x-4">
-<button
-  className="flex items-center text-green-600 hover:text-green-800"
-  onClick={() => setUpvotes(upvotes + 1)}
->
-<BiSolidUpvote />
-  {upvotes}
-</button>
-
-<button
-  className="flex items-center text-red-700 hover:text-red-800"
-  onClick={() => setDownvotes(downvotes + 1)}
->
-<BiSolidDownvote/>
-  {downvotes}
-</button>
-</div>
-</div>
-</>
+        </>
     );
   };
 
